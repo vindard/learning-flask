@@ -1,5 +1,9 @@
 from datetime import datetime
 from app import db
+from werkzeug.security import (
+    generate_password_hash as genPw,
+    check_password_hash as chkPw
+)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -10,6 +14,12 @@ class User(db.Model):
 
     def __repr__(self):
         return f'<User {self.username}>'
+
+    def set_password(self, password):
+        self.password_hash = genPw(password)
+
+    def check_password(self, password):
+        return chkPw(self.password_hash, password)
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
